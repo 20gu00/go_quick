@@ -1,0 +1,12 @@
+basePath: /api/v1
+host: 127.0.0.1:8080
+info:
+  contact:
+    name: cjq
+    url: github.com/20gu00
+  description: go开发的论坛
+  termsOfService: github.com/20gu00
+  title: forum项目接口文档
+  version: v1
+paths: {}
+swagger: "2.0"

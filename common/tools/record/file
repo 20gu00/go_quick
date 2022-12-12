@@ -1,0 +1,130 @@
+timestamp datatime类型
+create database forum charset=utf8mb4;
+create table user(id bigint auto_increment primary key,user_id bigint(20) unique not null,username varchar(64) unique not null,password varchar(64) not null,email varchar(64)null,gender tinyint default 0 not null,create_time timestamp default current_timestamp null,update_time timestamp default current_timestamp null on update current_timestamp,unique key `idx_user_id` (user_id),unique key `idx_username` (username))collate=utf8mb4_general_ci;
+普通索引键和主键索引和组合索引键,
+索引键 唯一索引
+on update当字段发生更新时会自动更新为当前时间
+INSERT INTO forum.user (id, user_id, username, password, email, gender, create_time, update_time) VALUES (1, 28018727488323585, 'aaa', '313233343536639a9119599647d841b1bef6ce5ea293', null, 0, '2022-12-2 09:09:09', '2022-12-2 09:09:09');
+INSERT INTO forum.user (id, user_id, username, password, email, gender, create_time, update_time) VALUES (2, 4183532125556736, 'cjq', '313233639a9119599647d841b1bef6ce5ea293', null, 0, '2022-12-2 19:09:09', '2022-12-2 19:09:09');
+
+mysql -u root -p forum < xxx.sql
+mysqldump -u root -p database forum > xxx.sql
+--no-data只备份表结构
+--all-databases全部数据库
+
+id主要是本表用,不要随意暴露,用额外的一个表的比如user_id去操作
+分布式id生成器:全局唯一,递增,高可用,高性能
+雪花算法
+场景:mysql的自增id需求大量暴涨时
+比如秒杀时大量的订单 订单id
+分布式 微服务 高并发
+
+snowflake:64位分布式id:
+可以简单使用而不是分布式
+1bit始终为0,41bit时间戳,10bit工作机器id(5bit数据中心,5bit确切的机器),12bit序列号
+时间戳默认从1970.1.1开始没我们可以自己设置开始时间,毫秒
+每一毫秒1024*4096=4194304
+
+https://github.com/bwmarrin/snowflake
+雪花算法的go实现
+支持动态调整上面的位数
+
+https://github.com/sony/sonyflake
+就是位的分配不同,这个支持到174,上面的支持到64
+
+ctx.Query() /:  ctx.Params() ?xx=xx&&xx=x  前后端分离多数是json(body raw json)
+
+
+
+不应该将后端的错误直接返回给前端
+ShouldBindJSON只会做个格式判断,如果参数少了或者参数不是结构体对应的,不会报错
+gin原生支持validator做参数校验,用的是binding(原生是validator)
+validator提供翻译器,使得提示或者错误输出更加友好(en zh)
+
+cookie-session jwt认证模式
+token无状态管理的认证模式更好,服务端不用存储数据了
+jwt json web token标准,特别适用于分布式站点的单点登录
+头部header 负载payload 签名signature
+三部分经过base64编码得到token
+非安全
+用.串联
+头部记录加密算法和token类型(jwt)
+负载可以自定义字段,官方提供的字段iss发行人 exp过期时间 sub主题 aud受众 nbf生效时间 iat签发时间 jti编号时间
+签名是针对前面两部分签名,防篡改
+
+jwt-go
+authorization bear token Token(其实也是header,可以手动写hearder Token: Bear xxx
+判断用户是否是登录状态 1.session中能否拿到该用户session 2.请求头中是否有token,token认证
+jwt搭配refresh token能够针对token被盗取的问题(需要前端的处理)
+jwt属于access token,过期就失效了,一般accesstoken过期时间短语refresh token,当access token过期是,refresh token会获取新的access token,当refresh token也过期那么就要重新登录
+
+基于token实现同一时间只能登陆同一设备
+时间维度上看,同一时间只有一个登录(两个浏览器也行)
+user_id<->token对应,存储在redis中
+请求带的token先判断是否有效,在通过对应该系拿到redis中的token对比
+
+
+
+
+.PHONY:虚拟命令(目标)
+目标: 需要的文件或者目标
+    命令(多行)
+@command不打印命令
+go vet 检查
+
+
+
+
+Air搭配gin实现热加载
+go get github.com/cosmtrek/air  安装air
+wget https://github.com/cosmtrek/air/releases/download/v1.29.0/air_1.29.0_linux_amd64.tar.gz
+air运行
+air -c .air.conf(默认在当前目录下找配置文件)
+
+后端比如int64类型数据过大,大于前端js的整数的表示的范围,数据失真,解决方法转换成string
+
+
+序列化:->[]byte  将数据转换成json格式
+反序列化:[]byte<- 将json数据转换成go数据
+
+zset key:  score: member
+时间 分数作score
+
+
+c.Query  ?xxx=xxx&&xxx=xxx
+c.Param Param
+/:id  /1
+
+
+常用body
+validator库对于空和0或者bool值为假,如果设置了require会报错
+也就是零值,看你的tag对应的字段的数据类型
+json tag是body用的
+
+
+旧的帖子某些数据放mysql即可,不用放redis了,key删除
+set zset都是集合
+
+
+set是对string类型的无序集合，zset是有序的集合
+
+set中的值是不能重复的；
+
+ 	    是否是集合	是否有序	有序实现方式	应用场景
+set	    是	        否	    无	        标签，社交
+zset	是	        是	    分值	        排行系统，社交
+
+
+
+swag本质是用来描述使用json的restful api接口的描述语言(body)
+https://github.com/swaggo/gin-swagger
+https://github.com/swaggo/swag
+
+// @BasePath /api/v1 接口公共的前缀
+一般在controller层写gin-swagger的注释
+
+swag init
+air
+http://127.0.0.1:8080/swagger/index.html
+有时候浏览器问题访问不了swag页面就换个浏览器,确切错误F12
+curl 127.0.0.1:8080/metrics

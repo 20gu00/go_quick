@@ -1,0 +1,16 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "go开发的论坛",
+        "title": "forum项目接口文档",
+        "termsOfService": "github.com/20gu00",
+        "contact": {
+            "name": "cjq",
+            "url": "github.com/20gu00"
+        },
+        "version": "v1"
+    },
+    "host": "127.0.0.1:8080",
+    "basePath": "/api/v1",
+    "paths": {}
+}
