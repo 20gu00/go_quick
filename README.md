@@ -10,7 +10,7 @@
 4.日志支持zap和logrus，默认zap  
 5.validator参数校验  
 6.jwt的token处理  
-7.redis支持单个redis数据库，哨兵，集群三种  
+7.redis支持单个redis数据库，哨兵，集群等  
 8.viper读取配置，支持配置文件热加载  
 9.air热加载项目，.air.conf配置文件  
 10.提供Makefile  
